@@ -16,47 +16,6 @@ Foco em separação de responsabilidades, manutenibilidade e boas práticas.
 
 ---
 
-## Estrutura de Pastas
-
-- **src/config/DataSource.ts**  
-  Configuração da conexão com o banco de dados usando TypeORM.
-
-- **src/controllers/UserController**  
-  Controladores responsáveis por receber as requisições, validar dados e chamar os serviços.
-
-- **src/entities/User**  
-  Entidades do banco de dados, modelando as tabelas e suas relações.
-
-- **src/repositories/**  
-  Implementação do padrão Repository para acesso e manipulação dos dados.  
-  - `IUserRepository`: interface que define os métodos da camada de repositório.  
-  - `UserRepository`: implementação concreta da interface.
-
-- **src/routes/UserRoutes**  
-  Definição das rotas relacionadas ao recurso usuário, delegando para o controlador.
-
-- **src/services/**  
-  Camada de negócio que contém a lógica principal da aplicação.  
-  - `IUserService`: interface que define os métodos dos serviços.  
-  - `UserService`: implementação concreta.
-
-- **src/shared/errors/**  
-  Classes para tratamento de erros customizados, como `AppError` e `NotFoundError`.
-
-- **src/shared/middlewares/ErrorHandler**  
-  Middleware global para captura e formatação de erros.
-
-- **src/shared/utils/email**  
-  Utilitário para validação de emails (exemplo de utilitário genérico).
-
-- **app.ts**  
-  Configuração principal do Express e aplicação dos middlewares e rotas.
-
-- **server.ts**  
-  Inicialização do servidor e conexão com o banco de dados.
-
----
-
 ## Como usar
 
 1. Instale as dependências:  
