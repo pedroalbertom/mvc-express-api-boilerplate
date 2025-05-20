@@ -29,12 +29,16 @@ Foco em separação de responsabilidades, manutenibilidade e boas práticas.
 
 - **src/repositories/**  
   Implementação do padrão Repository para acesso e manipulação dos dados.  
+  - `IUserRepository`: interface que define os métodos da camada de repositório.  
+  - `UserRepository`: implementação concreta da interface.
 
 - **src/routes/UserRoutes**  
   Definição das rotas relacionadas ao recurso usuário, delegando para o controlador.
 
 - **src/services/**  
   Camada de negócio que contém a lógica principal da aplicação.  
+  - `IUserService`: interface que define os métodos dos serviços.  
+  - `UserService`: implementação concreta.
 
 - **src/shared/errors/**  
   Classes para tratamento de erros customizados, como `AppError` e `NotFoundError`.
