@@ -11,10 +11,10 @@ export class User {
     id!: number;
 
     @Column()
-    name: string;
+    name!: string;
 
     @Column({ unique: true })
-    email: string;
+    email!: string;
 
     constructor(name: string, email: string) {
         this.name = name;

@@ -1,48 +1,81 @@
-// File: src/services/UserService.ts
-// Description: This file contains the implementation of the UserService class, which handles user-related business logic.
-// It interacts with the IUserRepository interface to perform CRUD operations on user data.
-// It includes methods for creating a user, getting all users, getting a user by ID, and getting a user by email.
-
+import { CreateUserInput, UserOutput, UserListOutput, UpdateUserInput } from "../dtos/User";
 import { User } from "../entities/User";
-import { isValidEmail } from "../shared/utils/Email";
-import { CreateUserInput, UserListOutput, UserOutput } from "../dtos/User";
 import { UserRepository } from "../repositories/UserRepository";
+import { AppError } from "../shared/errors/AppError";
+import { NotFoundError } from "../shared/errors/NotFoundError";
+import { isValidEmail } from "../shared/utils/Email";
 
 export class UserService {
     constructor(private userRepository: UserRepository) { }
 
     async createUser(data: CreateUserInput): Promise<UserOutput> {
-        if (!data.name || !data.email) throw new Error("Name and email are required");
-        if (!isValidEmail(data.email)) throw new Error("Invalid email format");
+        if (!data.name || !data.email)
+            throw new AppError("Name and email are required", 400);
+        if (!isValidEmail(data.email))
+            throw new AppError("Invalid email format", 400);
 
         const existingUser = await this.userRepository.findByEmail(data.email);
-        if (existingUser) throw new Error("Email already in use");
+        if (existingUser)
+            throw new AppError("Email already in use", 409);
 
         const user = new User(data.name, data.email);
-        return this.userRepository.save(user);
+        const saved = await this.userRepository.save(user);
+
+        return {
+            id: saved.id,
+            name: saved.name,
+            email: saved.email,
+        };
     }
 
     async getAllUsers(): Promise<UserListOutput> {
         const users = await this.userRepository.findAll();
-
         const userList: UserOutput[] = users.map(user => ({
             id: user.id,
             name: user.name,
             email: user.email,
         }));
-
         return { users: userList };
     }
 
     async getUserById(id: number): Promise<UserOutput | null> {
-        if (!Number.isInteger(id) || id <= 0) throw new Error("Invalid user ID");
-        return this.userRepository.findById(id);
+        if (!Number.isInteger(id) || id <= 0)
+            throw new AppError("Invalid user ID", 400);
+
+        const user = await this.userRepository.findById(id);
+        if (!user) throw new NotFoundError("User not found");
+
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+        };
     }
 
-    async getUserByEmail(email: string): Promise<UserOutput | null> {
-        if (!email) throw new Error("Email is required");
-        if (!isValidEmail(email)) throw new Error("Invalid email format");
+    async updateUser(id: number, data: UpdateUserInput): Promise<UserOutput> {
+        const user = await this.userRepository.findById(id);
+        if (!user) throw new NotFoundError("User not found");
 
-        return this.userRepository.findByEmail(email);
+        if (data.email && !isValidEmail(data.email)) {
+            throw new AppError("Invalid email format", 400);
+        }
+
+        user.name = data.name ?? user.name;
+        user.email = data.email ?? user.email;
+
+        const updated = await this.userRepository.save(user);
+
+        return {
+            id: updated.id,
+            name: updated.name,
+            email: updated.email,
+        };
+    }
+
+    async deleteUser(id: number): Promise<void> {
+        const user = await this.userRepository.findById(id);
+        if (!user) throw new NotFoundError("User not found");
+
+        await this.userRepository.delete(id);
     }
 }
