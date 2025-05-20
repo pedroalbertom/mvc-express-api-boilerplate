@@ -6,11 +6,11 @@
 Boilerplate para API REST com Express, TypeScript e TypeORM. Estrutura modular baseada em princípios de Clean Architecture e DDD simplificado. 
 Organização por camadas:
 
-entities/: modelos do domínio (TypeORM).
-repositories/: abstração de acesso a dados.
-services/: lógica de negócio.
-controllers/: tratamento de requisições.
-routes/: definição das rotas.
+- entities/: modelos do domínio (TypeORM).
+- repositories/: abstração de acesso a dados.
+- services/: lógica de negócio.
+- controllers/: tratamento de requisições.
+- routes/: definição das rotas.
 
 Foco em separação de responsabilidades, manutenibilidade e boas práticas.
 
