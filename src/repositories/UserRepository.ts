@@ -4,10 +4,9 @@
 
 import { User } from "../entities/User";
 import { Repository } from "typeorm";
-import { IUserRepository } from "./IUserRepository";
 import { AppDataSource } from "../config/DataSource";
 
-export class UserRepository implements IUserRepository {
+export class UserRepository {
     private repo: Repository<User>;
 
     constructor() {

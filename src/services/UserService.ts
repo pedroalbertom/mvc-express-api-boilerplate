@@ -3,14 +3,13 @@
 // It interacts with the IUserRepository interface to perform CRUD operations on user data.
 // It includes methods for creating a user, getting all users, getting a user by ID, and getting a user by email.
 
-import { IUserService } from "./IUserService";
 import { User } from "../entities/User";
-import { IUserRepository } from "../repositories/IUserRepository";
 import { isValidEmail } from "../shared/utils/Email";
 import { CreateUserInput, UserListOutput, UserOutput } from "../dtos/User";
+import { UserRepository } from "../repositories/UserRepository";
 
-export class UserService implements IUserService {
-    constructor(private userRepository: IUserRepository) { }
+export class UserService {
+    constructor(private userRepository: UserRepository) { }
 
     async createUser(data: CreateUserInput): Promise<UserOutput> {
         if (!data.name || !data.email) throw new Error("Name and email are required");
