@@ -9,7 +9,7 @@ import {
 import { AppError } from "../shared/errors/AppError";
 
 export class UserController {
-    constructor(private userService: UserService) {}
+    constructor(private userService: UserService) { }
 
     private handleError(err: any, res: Response): Response {
         if (err instanceof AppError) {
@@ -40,14 +40,10 @@ export class UserController {
     async getUserById(req: Request, res: Response): Promise<Response> {
         try {
             const id = Number(req.params.id);
-            if (isNaN(id)) {
-                return res.status(400).json({ error: "Invalid user ID" });
-            }
+            if (isNaN(id)) return res.status(400).json({ error: "Invalid user ID" });
 
             const user: UserOutput | null = await this.userService.getUserById(id);
-            if (!user) {
-                return res.status(404).json({ error: "User not found" });
-            }
+            if (!user) return res.status(404).json({ error: "User not found" });
 
             return res.status(200).json(user);
         } catch (err: any) {
@@ -58,12 +54,11 @@ export class UserController {
     async updateUser(req: Request, res: Response): Promise<Response> {
         try {
             const id = Number(req.params.id);
-            if (isNaN(id)) {
-                return res.status(400).json({ error: "Invalid user ID" });
-            }
+            if (isNaN(id)) return res.status(400).json({ error: "Invalid user ID" });
 
             const data: UpdateUserInput = req.body;
             const updatedUser: UserOutput = await this.userService.updateUser(id, data);
+
             return res.status(200).json(updatedUser);
         } catch (err: any) {
             return this.handleError(err, res);
@@ -73,11 +68,10 @@ export class UserController {
     async deleteUser(req: Request, res: Response): Promise<Response> {
         try {
             const id = Number(req.params.id);
-            if (isNaN(id)) {
-                return res.status(400).json({ error: "Invalid user ID" });
-            }
+            if (isNaN(id)) return res.status(400).json({ error: "Invalid user ID" });
 
             await this.userService.deleteUser(id);
+
             return res.status(204).send();
         } catch (err: any) {
             return this.handleError(err, res);
